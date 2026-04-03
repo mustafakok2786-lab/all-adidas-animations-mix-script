@@ -1,4 +1,4 @@
-local players = game:GetService("Players")
+local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
 local mixedIDs = {
@@ -8,20 +8,25 @@ local mixedIDs = {
     jump = "rbxassetid://18538153691",
     fall = "rbxassetid://18538164337",
     swim = "rbxassetid://106537993816942",
-    climb = "rbxassetid://93993406355955"}
+    climb = "rbxassetid://93993406355955"
+}
 
 local function apply(char)
     local anim = char:WaitForChild("Animate")
     local hum = char:WaitForChild("Humanoid")
-    
+
     local function update(name, id)
         local folder = anim:FindFirstChild(name)
         if folder then
-            for _, obj in pairs(folder:GetChildren()) do
-                if obj:IsA("Animation") then
-                    obj.AnimationId = id
+            for _, old in pairs(folder:GetChildren()) do
+                if old:IsA("Animation") then
+                    old:Destroy()
                 end
             end
+            local new = Instance.new("Animation")
+            new.Name = "Animation1"
+            new.AnimationId = id
+            new.Parent = folder
         end
     end
 
@@ -39,6 +44,10 @@ local function apply(char)
             track:Stop()
         end
     end
+    
+    anim.Disabled = true
+    task.wait(0.1)
+    anim.Disabled = false
 end
 
 if player.Character then apply(player.Character) end
