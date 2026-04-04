@@ -42,6 +42,8 @@ local function apply(char)
             track:Stop()
         end
     end
+
+    hum:ChangeState(Enum.HumanoidStateType.Running)
 end
 
 if player.Character then apply(player.Character) end
