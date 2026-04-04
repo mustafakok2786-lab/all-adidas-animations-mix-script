@@ -2,19 +2,18 @@ local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
 local mixedIDs = {
-    idle = "rbxassetid://126354114956642",
-    walk = "rbxassetid://75183215343859",
-    run = "rbxassetid://123973978164540",
-    jump = "rbxassetid://18538153691",
-    fall = "rbxassetid://18538164337",
-    swim = "rbxassetid://106537993816942",
-    climb = "rbxassetid://123695349157584"
+    idle  = "rbxassetid://126354114956642",  -- adidas Community
+    walk  = "rbxassetid://75183215343859",   -- adidas Aura
+    run   = "rbxassetid://123973978164540",  -- adidas Aura
+    jump  = "rbxassetid://18538153691",      -- adidas Sports
+    fall  = "rbxassetid://18538164337",      -- adidas Sports
+    swim  = "rbxassetid://106537993816942",  -- adidas Community
+    climb = "rbxassetid://123695349157584"   -- adidas Community
 }
 
 local function apply(char)
     local anim = char:WaitForChild("Animate", 5)
     if not anim then return end
-    
     local hum = char:WaitForChild("Humanoid", 5)
     if not hum then return end
 
