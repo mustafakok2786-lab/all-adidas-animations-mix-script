@@ -12,9 +12,12 @@ local mixedIDs = {
 }
 
 local function apply(char)
-    local anim = char:WaitForChild("Animate")
-    local hum = char:WaitForChild("Humanoid")
-   
+    local anim = char:WaitForChild("Animate", 5)
+    if not anim then return end
+    
+    local hum = char:WaitForChild("Humanoid", 5)
+    if not hum then return end
+
     local function update(name, id)
         local folder = anim:FindFirstChild(name)
         if folder then
@@ -42,7 +45,5 @@ local function apply(char)
     end
 end
 
-if player.Character then 
-    apply(player.Character) 
-end
+if player.Character then apply(player.Character) end
 player.CharacterAdded:Connect(apply)
