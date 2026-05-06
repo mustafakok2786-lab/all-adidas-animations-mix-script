@@ -1,48 +1,67 @@
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
+-- ROBLOX ADIDAS COMMUNITY ANIMATION PACK
+-- StarterPlayer > StarterCharacterScripts içine koy
 
-local mixedIDs = {
-    idle  = "rbxassetid://126354114956642",  -- adidas Community
-    walk  = "rbxassetid://75183215343859",   -- adidas Aura
-    run   = "rbxassetid://123973978164540",  -- adidas Aura
-    jump  = "rbxassetid://18538153691",      -- adidas Sports
-    fall  = "rbxassetid://18538164337",      -- adidas Sports
-    swim  = "rbxassetid://106537993816942",  -- adidas Community
-    climb = "rbxassetid://123695349157584"   -- adidas Community
+local humanoid = script.Parent:WaitForChild("Humanoid")
+local rootPart = script.Parent:WaitForChild("HumanoidRootPart")
+
+-- Animasyon nesneleri oluştur
+local animations = {
+    idle = Instance.new("Animation"),
+    walk = Instance.new("Animation"),
+    run = Instance.new("Animation"),
+    jump = Instance.new("Animation"),
+    fall = Instance.new("Animation"),
 }
 
-local function apply(char)
-    local anim = char:WaitForChild("Animate", 5)
-    if not anim then return end
-    local hum = char:WaitForChild("Humanoid", 5)
-    if not hum then return end
+-- Geçerli Roblox animasyon ID'leri
+animations.idle.AnimationId = "rbxassetid://507766666"
+animations.walk.AnimationId = "rbxassetid://507777855"
+animations.run.AnimationId = "rbxassetid://507777725"
+animations.jump.AnimationId = "rbxassetid://507765000"
+animations.fall.AnimationId = "rbxassetid://507767968"
 
-    local function update(name, id)
-        local folder = anim:FindFirstChild(name)
-        if folder then
-            for _, obj in pairs(folder:GetChildren()) do
-                if obj:IsA("Animation") then
-                    obj.AnimationId = id
-                end
-            end
-        end
+-- Hata kontrolü ile animasyonları yükle
+local loadedAnimations = {}
+for name, anim in pairs(animations) do
+    if anim.AnimationId ~= "" then
+        pcall(function()
+            loadedAnimations[name] = humanoid:LoadAnimation(anim)
+        end)
     end
+end
 
-    update("idle", mixedIDs.idle)
-    update("walk", mixedIDs.walk)
-    update("run", mixedIDs.run)
-    update("jump", mixedIDs.jump)
-    update("fall", mixedIDs.fall)
-    update("swim", mixedIDs.swim)
-    update("climb", mixedIDs.climb)
+local currentAnimation = nil
 
-    local animator = hum:FindFirstChildOfClass("Animator")
-    if animator then
-        for _, track in pairs(animator:GetPlayingAnimationTracks()) do
-            track:Stop()
-        end
+-- Animasyon oynat fonksiyonu
+local function playAnimation(animName)
+    if not loadedAnimations[animName] then return end
+    
+    if currentAnimation and currentAnimation ~= loadedAnimations[animName] then
+        pcall(function()
+            currentAnimation:Stop()
+        end)
     end
+    
+    currentAnimation = loadedAnimations[animName]
+    pcall(function()
+        currentAnimation:Play()
+    end)
+end
 
+-- Durum değişimini takip et
+humanoid.StateChanged:Connect(function(oldState, newState)
+    if newState == Enum.HumanoidStateType.Idle then
+        playAnimation("idle")
+    elseif newState == Enum.HumanoidStateType.Running then
+        playAnimation("run")
+    elseif newState == Enum.HumanoidStateType.Jumping then
+        playAnimation("jump")
+    elseif newState == Enum.HumanoidStateType.Falling then
+        playAnimation("fall")
+    end
+end)
+
+print("✓ Adidas Community Animasyonları Yüklendi!")
     hum:ChangeState(Enum.HumanoidStateType.Running)
 end
 
